@@ -10,7 +10,7 @@ const StatisticsGraphs = () => {
   const chartRef = useRef(null); // Create a ref to hold the chart instance
 console.log(statistics)
   useEffect(() => {
-    fetch('http://localhost:4000/api/statistics')
+    fetch('https://cstreambacknedsec.onrender.com/api/statistics')
       .then((response) => response.json())
       .then((data) => {
         setStatistics(data);
