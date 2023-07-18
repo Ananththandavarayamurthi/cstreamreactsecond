@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import StatisticsGraphs from './StatisticsGraphs';
+import { Link } from 'react-router-dom';
 
 
 const OrganizationMainDashboard = () => {
@@ -8,7 +9,7 @@ const OrganizationMainDashboard = () => {
 
   useEffect(() => {
     // Fetch the list of employees who applied for reimbursement from the backend
-    fetch('https://cstreambacknedsec.onrender.com/api/reimbursements')
+    fetch('http://localhost:4000/api/reimbursements')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -23,7 +24,7 @@ const OrganizationMainDashboard = () => {
 
   const handleApproveReject = (id, status) => {
     // Update the reimbursement status (approve/reject) on the backend
-    fetch(`https://cstreambacknedsec.onrender.com/api/reimbursements/${id}`, {
+    fetch(`http://localhost:4000/api/reimbursements/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -45,8 +46,7 @@ const OrganizationMainDashboard = () => {
 
   return (
     <div>
-     <span style={{display:"flex",justifyContent: 'flex-end'}}><IconButton color="primary" onClick={()=>navigate(`/employerreimbersment`)}>Home<HomeIcon /></IconButton></span>
-      
+     <Link to={"/employerreimbersment"}><button className='btn-primary'>add Requests</button></Link>
       <h2>Reimbursement Requests</h2>
       <ul>
         {reimbursements.map((reimbursement) => (
