@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const EmployeeReimbursementForm = () => {
   const [formData, setFormData] = useState({
@@ -7,39 +8,55 @@ const EmployeeReimbursementForm = () => {
     date: '',
     amount: '',
   });
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
-  
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Create a new FormData object to send the form data including the file
-    const formDataToSend = new FormData();
-    formDataToSend.append('typeOfExpense', formData.typeOfExpense);
-    formDataToSend.append('date', formData.date);
-    formDataToSend.append('amount', formData.amount);
+
+    // Simple validation to check if the form fields have valid values
+    if (!formData.typeOfExpense || !formData.date || !formData.amount) {
+      toast.error('Please fill in all required fields.');
+      return;
+    }
+
+    // Convert the amount to a number if needed (depends on server requirements)
+    const amount = parseFloat(formData.amount);
 
     // Make the API call to submit the reimbursement form data
     fetch('https://cstreambacknedsec.onrender.com/api/reimbursements', {
       method: 'POST',
-      body: formDataToSend,
+      body: JSON.stringify({
+        typeOfExpense: formData.typeOfExpense,
+        date: formData.date,
+        amount: amount,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Reimbursement submitted:', data);
-        // Reset the form after successful submission
-        setFormData({
-          typeOfExpense: '',
-          date: '',
-          amount: '',
-        });
-      }).then(navigate("/"))
-      .catch((error) => console.error('Error submitting reimbursement:', error));
+        // Check if the response contains an error message
+        if (data.error) {
+          toast.error(`Error submitting reimbursement: ${data.error}`);
+        } else {
+          toast.success('Reimbursement submitted successfully.');
+          // Reset the form after successful submission
+          setFormData({
+            typeOfExpense: '',
+            date: '',
+            amount: '',
+          });
+          // Navigate to the root route ("/") after successful submission
+          navigate('/');
+        }
+      })
+      .catch((error) => toast.error('Error submitting reimbursement:', error));
   };
 
   return (
