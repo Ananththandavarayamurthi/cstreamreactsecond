@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const EmployeeReimbursementForm = () => {
   const [formData, setFormData] = useState({
@@ -6,6 +7,7 @@ const EmployeeReimbursementForm = () => {
     date: '',
     amount: '',
   });
+  const navigate=useNavigate()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,7 +38,7 @@ const EmployeeReimbursementForm = () => {
           date: '',
           amount: '',
         });
-      })
+      }).then(navigate("/"))
       .catch((error) => console.error('Error submitting reimbursement:', error));
   };
 
