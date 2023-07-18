@@ -9,7 +9,7 @@ const OrganizationMainDashboard = () => {
 
   useEffect(() => {
     // Fetch the list of employees who applied for reimbursement from the backend
-    fetch('http://localhost:4000/api/reimbursements')
+    fetch('https://cstreambacknedsec.onrender.com/api/reimbursements')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
